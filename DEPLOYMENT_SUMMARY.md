@@ -96,19 +96,7 @@ docker run -p 7860:7860 kisan-ai
 ./deploy_hf.sh YOUR_HF_USERNAME kisan-ai-assistant
 ```
 
-### 7. requirements.docker.txt (Optional)
-**Purpose**: Simplified requirements file for Docker deployment.
-
-**Contents**: Core dependencies only (no development or optional packages):
-- sentence-transformers, transformers, faiss-cpu
-- flask, flask-cors, gunicorn
-- numpy, scipy, pandas, scikit-learn
-- requests, beautifulsoup4, lxml
-- python-dotenv, tqdm, pydantic
-
-**Note**: Currently uses main requirements.txt in Dockerfile.
-
-### 8. app.py (Modified)
+### 7. app.py (Modified)
 **Purpose**: Updated Flask application to support containerized deployment.
 
 **Changes**:
@@ -127,7 +115,7 @@ host = os.environ.get("HOST", "0.0.0.0")
 app.run(host=host, port=port, debug=debug, use_reloader=False)
 ```
 
-### 9. README.md (Updated)
+### 8. README.md (Updated)
 **Purpose**: Updated main README to include new deployment options.
 
 **Changes**:

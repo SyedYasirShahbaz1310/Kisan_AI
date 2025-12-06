@@ -222,6 +222,13 @@
         const languageSelect = document.getElementById('languageSelect');
         const askButton = document.getElementById('askButton');
 
+        // HTML escape function to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         function handleKeyPress(event) {
             if (event.key === 'Enter') {
                 askQuestion();
@@ -249,8 +256,8 @@
             queryInput.disabled = true;
             askButton.disabled = true;
 
-            // Add user message
-            addMessage(`<strong>You:</strong> ${query}`, true);
+            // Add user message with escaped HTML
+            addMessage(`<strong>You:</strong> ${escapeHtml(query)}`, true);
             queryInput.value = '';
 
             // Show loading
@@ -277,13 +284,13 @@
 
                 const data = await response.json();
 
-                // Format the response
-                let answerHtml = `<strong>Kisan AI:</strong><br><pre>${data.answer}</pre>`;
+                // Format the response with escaped HTML
+                let answerHtml = `<strong>Kisan AI:</strong><br><pre>${escapeHtml(data.answer)}</pre>`;
                 
                 if (data.sources && data.sources.length > 0) {
                     answerHtml += '<div class="sources"><strong>📚 Sources:</strong>';
                     data.sources.forEach(source => {
-                        answerHtml += `<br>• ${source}`;
+                        answerHtml += `<br>• ${escapeHtml(source)}`;
                     });
                     answerHtml += '</div>';
                 }
@@ -297,7 +304,7 @@
                     loadingMsg.parentElement.remove();
                 }
                 
-                addMessage(`<div class="error">❌ Error: ${error.message}</div>`);
+                addMessage(`<div class="error">❌ Error: ${escapeHtml(error.message)}</div>`);
             } finally {
                 // Re-enable input
                 queryInput.disabled = false;
