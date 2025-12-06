@@ -1,0 +1,97 @@
+# Hybrid Verified RAG - Pakistan Agriculture AI Advisor
+# Complete dependencies
+
+# ==============================================================================
+# CORE RAG DEPENDENCIES
+# ==============================================================================
+
+# Embedding Model
+sentence-transformers==2.2.2          # Multilingual embeddings
+transformers==4.35.2                  # HuggingFace transformers
+
+# Vector Database
+faiss-cpu==1.7.4                       # Local FAISS (CPU version)
+# faiss-gpu==1.7.4                     # Optional: GPU version (uncomment if GPU available)
+
+# Numerical Computing
+numpy==1.24.3                          # Scientific computing
+scipy==1.11.4                          # Advanced math functions
+
+# ==============================================================================
+# WEB SCRAPING & DATA PROCESSING
+# ==============================================================================
+
+requests==2.31.0                       # HTTP requests
+beautifulsoup4==4.12.2                 # HTML parsing
+lxml==4.9.3                            # XML/HTML processing
+selenium==4.13.0                       # For JavaScript-heavy sites (optional)
+
+# ==============================================================================
+# API & WEB SERVER
+# ==============================================================================
+
+flask==2.3.3                           # Web framework
+flask-cors==4.0.0                      # CORS support
+gunicorn==21.2.0                       # Production WSGI server
+
+# ==============================================================================
+# OPTIONAL: EXTERNAL SEARCH
+# ==============================================================================
+
+duckduckgo-search==3.9.5               # External verified search
+
+# ==============================================================================
+# OPTIONAL: VOICE SUPPORT
+# ==============================================================================
+
+librosa==0.10.0                        # Audio processing
+soundfile==0.12.1                      # Sound file I/O
+pydub==0.25.1                          # Audio manipulation
+
+# ==============================================================================
+# OPTIONAL: TRANSLATION
+# ==============================================================================
+
+google-cloud-translate==3.12.0         # Google Translate API (optional)
+deep-translator==1.11.4                # Open-source translation
+
+# ==============================================================================
+# UTILITIES & LOGGING
+# ==============================================================================
+
+python-dotenv==1.0.0                   # Environment variables
+tqdm==4.66.1                           # Progress bars
+pydantic==2.4.2                        # Data validation
+python-dateutil==2.8.2                 # Date utilities
+
+# ==============================================================================
+# DEVELOPMENT & TESTING
+# ==============================================================================
+
+pytest==7.4.3                          # Unit testing
+pytest-cov==4.1.0                      # Coverage testing
+black==23.12.0                         # Code formatter
+flake8==6.1.0                          # Linter
+mypy==1.7.0                            # Type checking
+
+# ==============================================================================
+# DEPLOYMENT
+# ==============================================================================
+
+docker==7.0.0                          # Docker client (for deployment)
+kubernetes==28.1.0                     # Kubernetes client (optional)
+
+# ==============================================================================
+# MACHINE LEARNING (Optional for advanced features)
+# ==============================================================================
+
+scikit-learn==1.3.2                    # ML utilities
+pandas==2.1.3                          # Data manipulation
+
+# ==============================================================================
+# NOTES:
+# ==============================================================================
+# 1. Use faiss-cpu for CPU-only systems
+# 2. Use faiss-gpu if you have NVIDIA GPU (requires CUDA 11.x)
+# 3. For production, also install: gunicorn, redis, postgresql
+# 4. See 06_IMPLEMENTATION_GUIDE.md for detailed setup instructions

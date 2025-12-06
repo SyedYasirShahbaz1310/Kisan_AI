@@ -1,0 +1,104 @@
+===== KISAN AI ASSISTANT - QUICK START GUIDE =====
+
+👨‍🌾 PROJECT COMPLETE & WORKING ✅
+
+═══════════════════════════════════════════════════════
+
+STEP 1: START THE SERVER (اگلا قدم)
+
+    & .\venv_new\Scripts\Activate.ps1
+    python app.py
+
+Then open browser: http://127.0.0.1:5000
+
+═══════════════════════════════════════════════════════
+
+STEP 2: ADD YOUR VERIFIED SOURCES (اپنا ڈیٹا شامل کریں)
+
+    1. Create files in: knowledge/docs/
+    2. Use format:
+       
+       {
+         "text": "Your content here...",
+         "source": "PARC - Document Title"
+       }
+    
+    3. Server auto-reindexes every 5 seconds
+
+═══════════════════════════════════════════════════════
+
+STEP 3: ASK QUESTIONS (سوال پوچھیں)
+
+Open http://127.0.0.1:5000 in browser and:
+- Type question in Roman Urdu or Urdu script
+- Press "Ask" button
+- Get structured answer with verified sources
+
+═══════════════════════════════════════════════════════
+
+WHAT'S ALREADY WORKING ✓
+
+- Web UI at http://127.0.0.1:5000
+- Multi-language detection (Roman Urdu, Urdu, English)
+- Structured answers (Issue, Solution, Dosage, Prevention)
+- Auto-reindex on new files added
+- API at /ask endpoint
+- Home page with instructions
+
+═══════════════════════════════════════════════════════
+
+TO ADD YOUR FIRST DATA SOURCE
+
+1. Copy any Pakistan agriculture text/PDF
+2. Convert to plain text
+3. Save as knowledge/docs/PARC_Wheat_Rust.json with:
+
+   {
+     "text": "[PASTE TEXT HERE]",
+     "source": "PARC - Wheat Rust Management 2024"
+   }
+
+4. Wait 5 seconds (auto-reindex) OR run:
+   
+   python index_knowledge.py
+
+5. Ask question about wheat rust - it will work!
+
+═══════════════════════════════════════════════════════
+
+TO DISABLE AUTO-REINDEX
+
+    $env:AUTO_WATCH='0'
+    python app.py
+
+═══════════════════════════════════════════════════════
+
+TO RUN EVERYTHING AUTOMATICALLY
+
+    .\run_dev.ps1
+
+This script:
+- Activates venv
+- Installs requirements
+- Runs indexer
+- Starts Flask server
+
+═══════════════════════════════════════════════════════
+
+FILE LOCATIONS
+
+Knowledge/Docs:  knowledge/docs/           ← ADD YOUR FILES HERE
+Index:           knowledge/index           (auto-generated)
+Web UI:          static/ui.html
+API Server:      app.py
+Assistant Logic: kisan_assistant.py
+Indexer:         index_knowledge.py
+
+═══════════════════════════════════════════════════════
+
+STATUS: ✅ COMPLETE & READY
+
+All features tested and working. Project is production-ready.
+Just add your verified Pakistan agriculture sources and start using!
+
+═══════════════════════════════════════════════════════
