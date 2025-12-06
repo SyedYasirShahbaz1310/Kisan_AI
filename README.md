@@ -194,14 +194,35 @@ Currently, only a **SAMPLE PLACEHOLDER** document is indexed (for demo). To get 
 
 ## Production Deployment
 
+### Option 1: WSGI Server (Gunicorn)
+
 For production, use a WSGI server instead of Flask's dev server:
 
-```powershell
+```bash
 pip install gunicorn
 gunicorn -w 4 -b 0.0.0.0:5000 app:app
 ```
 
-Or with Docker (if needed).
+### Option 2: Docker
+
+Build and run with Docker:
+
+```bash
+docker build -t kisan-ai .
+docker run -p 7860:7860 kisan-ai
+```
+
+See `DOCKER_DEPLOYMENT.md` for detailed Docker instructions.
+
+### Option 3: Hugging Face Spaces
+
+Deploy to Hugging Face Spaces using Docker:
+
+1. Create a new Space with Docker SDK
+2. Copy files to your Space repository
+3. Push and let Hugging Face build automatically
+
+See `HUGGINGFACE_DEPLOYMENT.md` for step-by-step deployment guide.
 
 ## Troubleshooting
 

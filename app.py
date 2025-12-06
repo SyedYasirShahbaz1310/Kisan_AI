@@ -87,4 +87,5 @@ def reindex():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     debug = os.environ.get("DEBUG", "0") != "0"
-    app.run(host="127.0.0.1", port=port, debug=debug, use_reloader=False)
+    host = os.environ.get("HOST", "0.0.0.0")
+    app.run(host=host, port=port, debug=debug, use_reloader=False)

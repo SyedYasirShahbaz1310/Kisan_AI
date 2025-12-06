@@ -1,0 +1,51 @@
+# Git files
+.git
+.gitignore
+
+# Python cache
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info
+dist
+build
+.eggs
+
+# Virtual environments
+venv
+venv_new
+.venv
+env
+ENV
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+test_*.py
+*_test.py
+
+# Documentation
+*.md
+!README.md
+QUICK_START.txt
+
+# PowerShell scripts
+*.ps1
+
+# Environment files (keep .env.example)
+.env
+
+# Knowledge index (will be generated)
+knowledge/index
+knowledge/docs.jsonl
