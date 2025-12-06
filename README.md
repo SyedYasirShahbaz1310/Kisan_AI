@@ -194,14 +194,43 @@ Currently, only a **SAMPLE PLACEHOLDER** document is indexed (for demo). To get 
 
 ## Production Deployment
 
-For production, use a WSGI server instead of Flask's dev server:
+### 🚀 Free Deployment (5 Minutes!)
+
+Deploy for FREE on cloud platforms and get a shareable link:
+
+**Quick Deploy Options:**
+1. **[Render.com](https://render.com)** - Recommended (750 hrs/month free)
+2. **[Railway.app](https://railway.app)** - Fast deploys ($5 credit/month)
+3. **[Fly.io](https://fly.io)** - Global edge (3 VMs free)
+
+**Step-by-step guide:** See [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+**Quick Deploy on Render:**
+1. Push code to GitHub
+2. Connect repo at [render.com](https://render.com)
+3. Click "Create Web Service"
+4. Get your link: `https://kisan-ai-assistant.onrender.com` ✅
+
+### Local Production Server
+
+For local production testing:
 
 ```powershell
 pip install gunicorn
-gunicorn -w 4 -b 0.0.0.0:5000 app:app
+gunicorn -w 4 -b 0.0.0.0:5000 app:app --timeout 120
 ```
 
-Or with Docker (if needed).
+### Docker Deployment
+
+```bash
+# Build image
+docker build -t kisan-ai .
+
+# Run container
+docker run -p 8080:8080 kisan-ai
+```
+
+**Full deployment guide:** [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 ## Troubleshooting
 

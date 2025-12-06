@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kisan AI Assistant - پاکستان زرعی مددگار</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2d5016 0%, #4CAF50 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .chat-container {
+            padding: 30px;
+            min-height: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            background: #f9f9f9;
+        }
+        
+        .message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            margin-left: 50px;
+        }
+        
+        .ai-message {
+            background: #f1f8e9;
+            border-left: 4px solid #4CAF50;
+            margin-right: 50px;
+        }
+        
+        .message-header {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .message-content {
+            line-height: 1.6;
+            white-space: pre-wrap;
+            color: #555;
+        }
+        
+        .sources {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .sources strong {
+            color: #333;
+        }
+        
+        .input-container {
+            padding: 30px;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+        
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        
+        textarea {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 60px;
+            max-height: 150px;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        button {
+            padding: 15px 30px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            white-space: nowrap;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .language-selector {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .language-selector label {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .language-selector select {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-box strong {
+            color: #856404;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌾 Kisan AI Assistant</h1>
+            <p>پاکستانی زرعی مددگار | Pakistani Agriculture AI Helper</p>
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <div class="info-box">
+                <strong>Welcome! خوش آمدید!</strong><br>
+                Ask your agriculture questions in Roman Urdu, Urdu script, or English.<br>
+                مثال: "Meri wheat pe rust aa gaya hai" یا "Cotton pest management"
+            </div>
+        </div>
+        
+        <div class="input-container">
+            <div class="language-selector">
+                <label for="language">Language:</label>
+                <select id="language">
+                    <option value="auto">Auto-Detect</option>
+                    <option value="roman_urdu">Roman Urdu</option>
+                    <option value="urdu">Urdu Script</option>
+                    <option value="english">English</option>
+                </select>
+            </div>
+            
+            <div class="input-wrapper">
+                <textarea 
+                    id="queryInput" 
+                    placeholder="Ask your agriculture question here... اپنا سوال یہاں لکھیں"
+                    rows="2"
+                ></textarea>
+                <button onclick="askQuestion()" id="askBtn">Ask سوال کریں</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const queryInput = document.getElementById('queryInput');
+        const languageSelect = document.getElementById('language');
+        const askBtn = document.getElementById('askBtn');
+
+        // Allow Enter key to submit (Shift+Enter for new line)
+        queryInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                askQuestion();
+            }
+        });
+
+        async function askQuestion() {
+            const query = queryInput.value.trim();
+            if (!query) {
+                alert('Please enter a question. براہ کرم سوال درج کریں۔');
+                return;
+            }
+
+            const language = languageSelect.value;
+
+            // Add user message
+            addMessage('user', query);
+            
+            // Clear input
+            queryInput.value = '';
+            
+            // Disable button
+            askBtn.disabled = true;
+            askBtn.textContent = 'Thinking... سوچ رہا ہے';
+
+            // Show loading
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'loading';
+            loadingDiv.id = 'loading';
+            loadingDiv.textContent = 'Processing your question';
+            chatContainer.appendChild(loadingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query, language })
+                });
+
+                const data = await response.json();
+                
+                // Remove loading
+                const loading = document.getElementById('loading');
+                if (loading) loading.remove();
+
+                if (response.ok) {
+                    addMessage('ai', data.answer, data.sources, data.language);
+                } else {
+                    addMessage('error', data.error || 'An error occurred. خرابی واقع ہوئی۔');
+                }
+            } catch (error) {
+                // Remove loading
+                const loading = document.getElementById('loading');
+                if (loading) loading.remove();
+                
+                addMessage('error', 'Failed to connect to server. سرور سے رابطہ ناکام۔');
+                console.error('Error:', error);
+            } finally {
+                // Re-enable button
+                askBtn.disabled = false;
+                askBtn.textContent = 'Ask سوال کریں';
+            }
+        }
+
+        function addMessage(type, content, sources = null, detectedLanguage = null) {
+            const messageDiv = document.createElement('div');
+            
+            if (type === 'user') {
+                messageDiv.className = 'message user-message';
+                messageDiv.innerHTML = `
+                    <div class="message-header">You:</div>
+                    <div class="message-content">${escapeHtml(content)}</div>
+                `;
+            } else if (type === 'ai') {
+                messageDiv.className = 'message ai-message';
+                let sourcesHtml = '';
+                if (sources && sources.length > 0) {
+                    sourcesHtml = `
+                        <div class="sources">
+                            <strong>Sources استناد:</strong><br>
+                            ${sources.map(s => `• ${escapeHtml(s)}`).join('<br>')}
+                        </div>
+                    `;
+                }
+                
+                const langInfo = detectedLanguage ? ` (${detectedLanguage})` : '';
+                
+                messageDiv.innerHTML = `
+                    <div class="message-header">Kisan AI${langInfo}:</div>
+                    <div class="message-content">${escapeHtml(content)}</div>
+                    ${sourcesHtml}
+                `;
+            } else if (type === 'error') {
+                messageDiv.className = 'message error';
+                messageDiv.innerHTML = `
+                    <div class="message-header">Error:</div>
+                    <div class="message-content">${escapeHtml(content)}</div>
+                `;
+            }
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

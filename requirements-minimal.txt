@@ -1,0 +1,20 @@
+# ESSENTIAL DEPLOYMENT DEPENDENCIES
+# Minimal production requirements for Kisan AI Assistant
+
+# Core RAG Dependencies
+sentence-transformers==2.2.2
+transformers==4.35.2
+faiss-cpu==1.7.4
+numpy==1.24.3
+
+# Web Framework
+flask==2.3.3
+flask-cors==4.0.0
+gunicorn==21.2.0
+
+# Utilities
+python-dotenv==1.0.0
+tqdm==4.66.1
+
+# Data Processing
+requests==2.31.0
