@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kisan AI Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2d5016 0%, #4CAF50 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .chat-container {
+            padding: 30px;
+        }
+        
+        .message-box {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+        
+        .user-message {
+            background: #e3f2fd;
+            text-align: right;
+            margin-left: 20%;
+        }
+        
+        .assistant-message {
+            background: #f1f8e9;
+            margin-right: 20%;
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        #queryInput {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        #queryInput:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .language-selector {
+            margin-bottom: 15px;
+        }
+        
+        .language-selector label {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #333;
+        }
+        
+        .language-selector select {
+            padding: 8px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+        }
+        
+        button {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+            font-style: italic;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .sources {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff3e0;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .sources strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #e65100;
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌾 Kisan AI Assistant</h1>
+            <p>Pakistani Agriculture AI - Ask about crops, pests, diseases, irrigation, and more</p>
+        </div>
+        
+        <div class="chat-container">
+            <div class="message-box" id="messageBox">
+                <div class="message assistant-message">
+                    <strong>Kisan AI:</strong> Assalam o Alaikum! Main aapki madad ke liye hazir hoon. 
+                    Pakistan ki agriculture ke bare mein koi bhi sawal pooch sakte hain.
+                    (Roman Urdu, Urdu, ya English mein likh sakte hain)
+                </div>
+            </div>
+            
+            <div class="language-selector">
+                <label for="languageSelect">Language:</label>
+                <select id="languageSelect">
+                    <option value="auto">Auto Detect</option>
+                    <option value="roman_urdu">Roman Urdu</option>
+                    <option value="urdu">Urdu</option>
+                    <option value="english">English</option>
+                </select>
+            </div>
+            
+            <div class="input-container">
+                <input 
+                    type="text" 
+                    id="queryInput" 
+                    placeholder="Apna sawal yahan likhen... (e.g., Meri wheat pe rust aa gaya hai)"
+                    onkeypress="handleKeyPress(event)"
+                />
+                <button onclick="askQuestion()" id="askButton">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const messageBox = document.getElementById('messageBox');
+        const queryInput = document.getElementById('queryInput');
+        const languageSelect = document.getElementById('languageSelect');
+        const askButton = document.getElementById('askButton');
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                askQuestion();
+            }
+        }
+
+        function addMessage(message, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'assistant-message'}`;
+            messageDiv.innerHTML = message;
+            messageBox.appendChild(messageDiv);
+            messageBox.scrollTop = messageBox.scrollHeight;
+        }
+
+        async function askQuestion() {
+            const query = queryInput.value.trim();
+            if (!query) {
+                alert('Please enter a question!');
+                return;
+            }
+
+            const language = languageSelect.value;
+
+            // Disable input while processing
+            queryInput.disabled = true;
+            askButton.disabled = true;
+
+            // Add user message
+            addMessage(`<strong>You:</strong> ${query}`, true);
+            queryInput.value = '';
+
+            // Show loading
+            addMessage('<div class="loading">⏳ Searching verified sources...</div>');
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query, language })
+                });
+
+                // Remove loading message
+                const loadingMsg = messageBox.querySelector('.loading');
+                if (loadingMsg) {
+                    loadingMsg.parentElement.remove();
+                }
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Format the response
+                let answerHtml = `<strong>Kisan AI:</strong><br><pre>${data.answer}</pre>`;
+                
+                if (data.sources && data.sources.length > 0) {
+                    answerHtml += '<div class="sources"><strong>📚 Sources:</strong>';
+                    data.sources.forEach(source => {
+                        answerHtml += `<br>• ${source}`;
+                    });
+                    answerHtml += '</div>';
+                }
+
+                addMessage(answerHtml);
+
+            } catch (error) {
+                // Remove loading message
+                const loadingMsg = messageBox.querySelector('.loading');
+                if (loadingMsg) {
+                    loadingMsg.parentElement.remove();
+                }
+                
+                addMessage(`<div class="error">❌ Error: ${error.message}</div>`);
+            } finally {
+                // Re-enable input
+                queryInput.disabled = false;
+                askButton.disabled = false;
+                queryInput.focus();
+            }
+        }
+
+        // Focus input on load
+        window.onload = () => {
+            queryInput.focus();
+        };
+    </script>
+</body>
+</html>
